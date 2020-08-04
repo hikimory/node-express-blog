@@ -19,6 +19,8 @@ router.post('/register', (req, res, next) => {
         })
           .then(user => {
             console.log(user);
+            req.session.userId = user.id;
+            req.session.userLogin = user.login;
             res.json({
               ok: true
             });
@@ -39,6 +41,58 @@ router.post('/register', (req, res, next) => {
       });
     }
   });
+});
+
+// POST is register
+router.post('/login', (req, res, next) => {
+  const login = req.body.login;
+  const password = req.body.password;
+
+  models.User.findOne({ login })
+      .then(user => {
+        if (!user) {
+          res.json({
+            ok: false,
+            error: 'Логин и пароль неверны!',
+            fields: ['login', 'password']
+          });
+        } else {
+          bcrypt.compare(password, user.password, function(err, result) {
+            if (!result) {
+              res.json({
+                ok: false,
+                error: 'Логин и пароль неверны!',
+                fields: ['login', 'password']
+              });
+            } else {
+              req.session.userId = user.id;
+              req.session.userLogin = user.login;
+              res.json({
+                ok: true
+              });
+            }
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        res.json({
+          ok: false,
+          error: 'Ошибка, попробуйте позже!'
+        });
+      });
+});
+
+// GET for logout
+router.get('/logout', (req, res, next) => {
+  if (req.session) {
+    // delete session object
+    req.session.destroy(() => {
+      res.redirect('/');
+    });
+  } else {
+    res.redirect('/');
+  }
 });
 
 module.exports = router;

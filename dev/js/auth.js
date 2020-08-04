@@ -2,14 +2,28 @@ $(function() {
     // toggle
     $('.switch-button').on('click', function (e) {
         e.preventDefault();
+        
         $('input').val('');
+        $('p.error').remove();
+        $('input').removeClass('error');
+
         $('.login').toggle();
         $('.register').toggle();
     });
 
-    function printError(data){
+    function printRegError(data){
         $('p.error').remove();
         $('.register h2').after('<p class="error">' + data.error + '</p>');
+        if (data.fields) {
+          data.fields.forEach(function(item) {
+            $('input[name=' + item + ']').addClass('error');
+          });
+        }
+    }
+
+    function printAuthError(data){
+        $('p.error').remove();
+        $('.login h2').after('<p class="error">' + data.error + '</p>');
         if (data.fields) {
           data.fields.forEach(function(item) {
             $('input[name=' + item + ']').addClass('error');
@@ -38,19 +52,19 @@ $(function() {
             if (!data.password) fields.push('password');
             if (!data.passwordConfirm) fields.push('passwordConfirm');
 
-            printError({error: 'Все поля должны быть заполнены!',
+            printRegError({error: 'Все поля должны быть заполнены!',
             fields})
         } else if (!/^[a-zA-Z0-9]+$/.test(data.login)) {
-            printError({error: 'Только латинские буквы и цифры!',
+            printRegError({error: 'Только латинские буквы и цифры!',
             fields: ['login']})
         } else if (data.login.length < 3 || data.login.length > 16) {
-            printError({error: 'Длина логина от 3 до 16 символов!',
+            printRegError({error: 'Длина логина от 3 до 16 символов!',
             fields: ['login']})
         } else if (data.password !== data.passwordConfirm) {
-            printError({error: 'Пароли не совпадают!',
+            printRegError({error: 'Пароли не совпадают!',
             fields: ['password', 'passwordConfirm']}) 
         } else if (data.password.length < 5) {
-            printError({error: 'Минимальная длина пароля 5 символов!',
+            printRegError({error: 'Минимальная длина пароля 5 символов!',
             fields: ['password']})
         } else {
             $.ajax({
@@ -60,11 +74,43 @@ $(function() {
                 url: '/api/auth/register'
               }).done(function(data) {
                 if (!data.ok) {
-                    printError(data)
+                    printRegError(data)
                   } else {
-                    $('.register h2').after('<p class="success">Отлично!</p>');
+                    $(location).attr('href', '/');
                   }
               });
         } 
     });
+
+    // login
+    $('.login-button').on('click', function(e) {
+        e.preventDefault();
+
+        const data = {
+        login: $('#login-login').val(),
+        password: $('#login-password').val()
+        };
+
+        if (!data.login || !data.password) {
+            const fields = [];
+            if (!data.login) fields.push('login');
+            if (!data.password) fields.push('password');
+        
+            printAuthError({error: 'Все поля должны быть заполнены!', fields})
+        } else{
+            $.ajax({
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                url: '/api/auth/login'
+            }).done(function(data) {
+                if (!data.ok) {
+                    printAuthError(data)
+                } else {
+                    $(location).attr('href', '/');
+                }
+            });
+        }
+    });
+
 });
