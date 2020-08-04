@@ -1,0 +1,10 @@
+{
+  "ignore": ["node_modules", "dev", "public"],
+  "env": {
+    "NODE_ENV": "development",
+    "PORT": 3000,
+    "MONGO_URL": "mongodb+srv://nick:1q2w3e4r@cluster0.vxs4v.mongodb.net/blog"
+  },
+    "ext": ".js,.json",
+    "watch": "./"
+}
