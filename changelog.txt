@@ -5,3 +5,5 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Express and mongoose support.
 - EJS template engine.
+- Environment variables.
+- Database connection.

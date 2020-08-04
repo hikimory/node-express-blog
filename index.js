@@ -1,12 +1,15 @@
-const express = require('express')
+const app = require('./app');
+const database = require('./database');
+const config = require('./config');
 
-const PORT = process.env.PORT || 3000
-
-const app = express()
-
-app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: true }))
-
-app.get('/', (req, res) => res.render('index'));
-
-app.listen(PORT, () => console.log('Server has been started...')) 
+database()
+  .then(info => {
+    console.log(`Connected to ${info.host}:${info.port}/${info.name}`);
+    app.listen(config.PORT, () =>
+      console.log(`Example app listening on port ${config.PORT}!`)
+    );
+  })
+  .catch(() => {
+    console.error('Unable to connect to database');
+    process.exit(1);
+  });
