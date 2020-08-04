@@ -1,15 +1,9 @@
-const app = require('./app');
-const database = require('./database');
-const config = require('./config');
+const express = require('express')
 
-database()
-  .then(info => {
-    console.log(`Connected to ${info.host}:${info.port}/${info.name}`);
-    app.listen(config.PORT, () =>
-      console.log(`Example app listening on port ${config.PORT}!`)
-    );
-  })
-  .catch(() => {
-    console.error('Unable to connect to database');
-    process.exit(1);
-  });
+const PORT = process.env.PORT || 3000
+
+const app = express()
+
+app.get('/', (req, res) => res.send("Hellow Thanks that you're working !!!!"))
+
+app.listen(PORT, () => console.log('Server has been started...')) 
