@@ -53,7 +53,18 @@ $(function() {
             printError({error: 'Минимальная длина пароля 5 символов!',
             fields: ['password']})
         } else {
-            console.log("Send")
+            $.ajax({
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                url: '/api/auth/register'
+              }).done(function(data) {
+                if (!data.ok) {
+                    printError(data)
+                  } else {
+                    $('.register h2').after('<p class="success">Отлично!</p>');
+                  }
+              });
         } 
     });
 });
