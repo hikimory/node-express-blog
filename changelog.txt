@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Post form validation.
 - Ability to add posts.
 - Post generator.
+- Pagination.
 
 ### Fixed
 - Post and auth scripts.
