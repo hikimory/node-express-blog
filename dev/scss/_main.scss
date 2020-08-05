@@ -9,6 +9,17 @@
       margin-right: $freeSpace;
       margin-bottom: $freeSpace;
       min-height: 100px;
+
+      .pagination {
+        font-size: 1.15em;
+        .old {
+          float: right;
+        }
+        .new {
+          float: left;
+        }
+      }
+    
     }
 
     .sidebar {

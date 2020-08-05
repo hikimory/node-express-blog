@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2020-08-05
+### Added
+- Post page.
+- Editor plugin.
+- Post form validation.
+- Ability to add posts.
+- Post generator.
+- Pagination.
+- Post route.
+
+### Fixed
+- Post and auth scripts.
+
 ## [1.2.0] - 2020-08-04
 ### Added
 - Session.
