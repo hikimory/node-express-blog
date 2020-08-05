@@ -1,5 +1,6 @@
 const {Router} = require('express');
 const router = Router();
+const models = require('../models');
 
 // GET for add
 router.get('/add', (req, res, next) => {
@@ -14,12 +15,27 @@ router.get('/add', (req, res, next) => {
     });
 });
 
-// POST is register
+// POST is add
 router.post('/add', (req, res, next) => {
-    console.log(req.body);
-    res.json({
-      ok: true
-    });
-  });
+  const title = req.body.title.trim().replace(/ +(?= )/g, '');
+  const body = req.body.body;
+    
+    models.Post.create({
+      title,
+      body
+    })
+      .then(post => {
+        console.log(post);
+        res.json({
+          ok: true
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        res.json({
+          ok: false
+        });
+      });
+});
 
 module.exports = router;
