@@ -6,15 +6,18 @@ $(function() {
         }
     });
 
+  function removeErrors() {
+    $('.post-form p.error').remove();
+    $('.post-form input, #post-body').removeClass('error');
+  }
+
     // clear
     $('.post-form input, #post-body').on('focus', function() {
-        $('.post-form p.error').remove();
-        $('.post-form input, #post-body').removeClass('error');
+        removeErrors();
     });
 
     function printError(data)
     {
-        $('.post-form p.error').remove();
         $('.post-form h2').after('<p class="error">' + data.error + '</p>');
         if (data.fields) {
           data.fields.forEach(function(item) {
@@ -26,6 +29,7 @@ $(function() {
     // publish
     $('.publish-button').on('click', function(e) {
     e.preventDefault();
+    removeErrors();
 
     const data = {
       title: $('#post-title').val(),

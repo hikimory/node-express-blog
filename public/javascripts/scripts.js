@@ -1,18 +1,22 @@
 $(function() {
+    
+    function removeErrors() {
+        $('form.login p.error, form.register p.error').remove();
+        $('form.login input, form.register input').removeClass('error');
+    }
+    
     // toggle
     $('.switch-button').on('click', function (e) {
         e.preventDefault();
         
         $('input').val('');
-        $('p.error').remove();
-        $('input').removeClass('error');
+        removeErrors();
 
         $('.login').toggle();
         $('.register').toggle();
     });
 
     function printRegError(data){
-        $('p.error').remove();
         $('.register h2').after('<p class="error">' + data.error + '</p>');
         if (data.fields) {
           data.fields.forEach(function(item) {
@@ -22,7 +26,6 @@ $(function() {
     }
 
     function printAuthError(data){
-        $('p.error').remove();
         $('.login h2').after('<p class="error">' + data.error + '</p>');
         if (data.fields) {
           data.fields.forEach(function(item) {
@@ -33,12 +36,12 @@ $(function() {
 
     // clear
     $('form.login input, form.register input').on('focus', function() {
-        $('form.login p.error, form.register p.error').remove();
-        $('form.login input, form.register input').removeClass('error');
+        removeErrors();
     });
 
     $('.register-button').on('click', function(e) {
         e.preventDefault();
+        removeErrors();
     
         const data = {
           login: $('#register-login').val(),
@@ -85,6 +88,7 @@ $(function() {
     // login
     $('.login-button').on('click', function(e) {
         e.preventDefault();
+        removeErrors();
 
         const data = {
         login: $('#login-login').val(),
@@ -122,15 +126,18 @@ $(function() {
         }
     });
 
+  function removeErrors() {
+    $('.post-form p.error').remove();
+    $('.post-form input, #post-body').removeClass('error');
+  }
+
     // clear
     $('.post-form input, #post-body').on('focus', function() {
-        $('.post-form p.error').remove();
-        $('.post-form input, #post-body').removeClass('error');
+        removeErrors();
     });
 
     function printError(data)
     {
-        $('.post-form p.error').remove();
         $('.post-form h2').after('<p class="error">' + data.error + '</p>');
         if (data.fields) {
           data.fields.forEach(function(item) {
@@ -142,6 +149,7 @@ $(function() {
     // publish
     $('.publish-button').on('click', function(e) {
     e.preventDefault();
+    removeErrors();
 
     const data = {
       title: $('#post-title').val(),
