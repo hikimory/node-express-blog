@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Ability to add posts.
 - Post generator.
 - Pagination.
+- Post route.
 
 ### Fixed
 - Post and auth scripts.
