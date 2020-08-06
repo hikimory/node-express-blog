@@ -20,34 +20,32 @@ router.get('/add', (req, res, next) => {
 });
 
 // POST is add
-router.post('/add', (req, res, next) => {
+router.post('/add', async(req, res, next) => {
  
     const userId = req.session.userId;
     const userLogin = req.session.userLogin;
   
     if (!userId || !userLogin) {
       res.redirect('/');
-    } else{
-        const title = req.body.title.trim().replace(/ +(?= )/g, '');
-        const body = req.body.body;
-        
-        models.Post.create({
-          title,
-          body,
-          userId 
-        })
-          .then(post => {
-            console.log(post);
-            res.json({
-              ok: true
-            });
+    } else {
+      const title = req.body.title.trim().replace(/ +(?= )/g, '');
+      const body = req.body.body;
+      try {
+        const post = await models.Post.create({
+            title,
+            body,
+            userId 
           })
-          .catch(err => {
-            console.log(err);
-            res.json({
-              ok: false
-            });
+          console.log(post);
+          res.json({
+            ok: true
           });
+      } catch (err) {
+          console.log(err);
+          res.json({
+            ok: false,
+          });
+      }
     }
 });
 

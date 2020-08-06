@@ -55,9 +55,9 @@ $(function() {
           }).done(function(data) {
             console.log(data);
             if (!data.ok) {
-              
+              printError(data)
             } else {
-              
+              $(location).attr('href', '/');
             }
         });
     }

@@ -3,35 +3,29 @@ const router = Router();
 const bcrypt = require('bcrypt-nodejs');
 const models = require('../models');
 
-// POST is authorized
-router.post('/register', (req, res, next) => {
+// POST is register
+router.post('/register', async(req, res, next) => {
   const login = req.body.login;
   const password = req.body.password;
 
-  models.User.findOne({
-    login
-  }).then(user => {
+  try {
+    const user = await models.User.findOne({
+      login
+    });
+
     if (!user) {
-      bcrypt.hash(password, null, null, (err, hash) => {
-        models.User.create({
-          login,
-          password: hash
+      bcrypt.hash(password, null, null, async(err, hash) => {
+        const newUser = await models.User.create({
+            login,
+            password: hash
         })
-          .then(user => {
-            console.log(user);
-            req.session.userId = user.id;
-            req.session.userLogin = user.login;
-            res.json({
-              ok: true
-            });
-          })
-          .catch(err => {
-            console.log(err);
-            res.json({
-              ok: false,
-              error: 'Ошибка, попробуйте позже!'
-            });
-          });
+         
+        console.log(newUser);
+        req.session.userId = newUser.id;
+        req.session.userLogin = newUser.login;
+        res.json({
+          ok: true
+        });
       });
     } else {
       res.json({
@@ -40,47 +34,57 @@ router.post('/register', (req, res, next) => {
         fields: ['login']
       });
     }
-  });
+  } catch (err) {
+      console.log(err);
+      res.json({
+        ok: false,
+        error: 'Ошибка, попробуйте позже!'
+      });
+  }
+  
 });
 
-// POST is register
-router.post('/login', (req, res, next) => {
+// POST is login
+router.post('/login', async(req, res, next) => {
   const login = req.body.login;
   const password = req.body.password;
 
-  models.User.findOne({ login })
-      .then(user => {
-        if (!user) {
+  try {
+    const user = await models.User.findOne({
+      login
+    });
+
+    if (!user) {
+      res.json({
+        ok: false,
+        error: 'Логин и пароль неверны!',
+        fields: ['login', 'password']
+      });
+    } else {
+      bcrypt.compare(password, user.password, (err, result) => {
+        if (!result) {
           res.json({
             ok: false,
             error: 'Логин и пароль неверны!',
             fields: ['login', 'password']
           });
         } else {
-          bcrypt.compare(password, user.password, function(err, result) {
-            if (!result) {
-              res.json({
-                ok: false,
-                error: 'Логин и пароль неверны!',
-                fields: ['login', 'password']
-              });
-            } else {
-              req.session.userId = user.id;
-              req.session.userLogin = user.login;
-              res.json({
-                ok: true
-              });
-            }
+          req.session.userId = user.id;
+          req.session.userLogin = user.login;
+          res.json({
+            ok: true
           });
         }
-      })
-      .catch(err => {
-        console.log(err);
-        res.json({
-          ok: false,
-          error: 'Ошибка, попробуйте позже!'
-        });
       });
+    }
+  } catch (err) {
+      console.log(err);
+      res.json({
+        ok: false,
+        error: 'Ошибка, попробуйте позже!'
+      });
+  }
+
 });
 
 // GET for logout
