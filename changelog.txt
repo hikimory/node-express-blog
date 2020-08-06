@@ -7,7 +7,10 @@ All notable changes to this project will be documented in this file.
 - Comment route.
 - Comment model.
 - Comment scripts.
-- Ability to add posts.
+- Ability to add comments.
+
+### Fixed
+- Adding comments.
 
 ## [2.2.0] - 2020-08-06
 ### Added

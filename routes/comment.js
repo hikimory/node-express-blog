@@ -26,6 +26,13 @@ router.post('/add', async (req, res, next) => {
             body,
             userId
           });
+
+          res.json({
+            ok: true,
+            body,
+            login: userLogin
+          });
+
         } else {
           const parentComment = await models.Comment.findById(parent);
           if (!parentComment) {
@@ -45,6 +52,12 @@ router.post('/add', async (req, res, next) => {
           children.push(comment.id);
           parentComment.children = children;
           await parentComment.save();
+
+          res.json({
+            ok: true,
+            body,
+            login: userLogin
+          });
         }
       } catch (error) {
         res.json({

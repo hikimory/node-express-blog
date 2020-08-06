@@ -1,44 +1,67 @@
 $(function() {
-    let commentForm;
-    let parentId;
-  
-    // add form
-    $('#new, #reply').on('click', function() {
-      if (commentForm) {
-        commentForm.remove();
+  let commentForm;
+  let parentId;
+
+  function printError(data)
+  {
+      if (data.error === undefined) {
+        data.error = 'Неизвестная ошибка!';
       }
-      parentId = null;
-  
-      commentForm = $('.comment').clone(true, true);
-  
-      if ($(this).attr('id') === 'new') {
-        commentForm.appendTo('.comment-list');
-      } else {
-        const parentComment = $(this).parent();
-        parentId = parentComment.attr('id');
-        $(this).after(commentForm);
-      }
-  
-      commentForm.css({ display: 'flex' });
-    });
-  
-    // cancel form
-    $('form.comment .cancel').on('click', function(e) {
-      e.preventDefault();
+      $(commentForm).prepend('<p class="error">' + data.error + '</p>');
+  }
+
+  function form(isNew, comment) {
+    $('.reply').show();
+
+    if (commentForm) {
       commentForm.remove();
-    });
-  
-    // publish
-    $('form.comment .send').on('click', function(e) {
-      e.preventDefault();
-      // removeErrors();
-  
-      const data = {
-        post: $('.comments').attr('id'),
-        body: commentForm.find('textarea').val(),
-        parent: parentId
-      };
-  
+    }
+    parentId = null;
+
+    commentForm = $('.comment').clone(true, true);
+
+    if (isNew) {
+      commentForm.find('.cancel').hide();
+      commentForm.appendTo('.comment-list');
+    } else {
+      const parentComment = $(comment).parent();
+      parentId = parentComment.attr('id');
+      $(comment).after(commentForm);
+    }
+
+    commentForm.css({ display: 'flex' });
+  }
+
+  // load
+  form(true);
+
+  // add form
+  $('.reply').on('click', function() {
+    form(false, this);
+    $(this).hide();
+  });
+
+  // add form
+  $('form.comment .cancel').on('click', function(e) {
+    e.preventDefault();
+    commentForm.remove();
+    // load
+    form(true);
+  });
+
+  // publish
+  $('form.comment .send').on('click', function(e) {
+    e.preventDefault();
+
+    const data = {
+      post: $('.comments').attr('id'),
+      body: commentForm.find('textarea').val(),
+      parent: parentId
+    };
+
+    if(!data.body){
+      printError({error: "Коментарий пуст !"})
+    } else {
       $.ajax({
         type: 'POST',
         data: JSON.stringify(data),
@@ -46,17 +69,22 @@ $(function() {
         url: '/comment/add'
       }).done(function(data) {
         console.log(data);
-        // if (!data.ok) {
-        //   $('.post-form h2').after('<p class="error">' + data.error + '</p>');
-        //   if (data.fields) {
-        //     data.fields.forEach(function(item) {
-        //       $('#post-' + item).addClass('error');
-        //     });
-        //   }
-        // } else {
-        //   // $('.register h2').after('<p class="success">Отлично!</p>');
-        //   $(location).attr('href', '/');
-        // }
+        if (!data.ok) {
+          printError(data)
+        } else {
+          const newComment =
+            '<ul><li style="background-color:#ffffe0;"><div class="head"><a href="/users/' +
+            data.login +
+            '">' +
+            data.login +
+            '</a><spam class="date">Только что</spam></div>' +
+            data.body +
+            '</li></ul>';
+  
+          $(commentForm).after(newComment);
+          form(true);
+        }
       });
-    });
+    }
+  });
 });
