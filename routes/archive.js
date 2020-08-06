@@ -12,10 +12,13 @@ function posts(req, res) {
     models.Post.find({})
       .skip(perPage * page - perPage)
       .limit(perPage)
+      .populate('userId')
+      .sort({ createdAt: -1 })
       .then(posts => {
+       // console.log(posts)
         models.Post.count()
           .then(count => {
-            res.render('index', {
+            res.render('archive/index', {
               posts,
               current: page,
               pages: Math.ceil(count / perPage),
@@ -63,6 +66,49 @@ function posts(req, res) {
         }
       });
     }
-  });  
+});  
+
+// users posts
+router.get('/users/:login/:page*?', (req, res, next) => {
+  const userId = req.session.userId;
+  const userLogin = req.session.userLogin;
+  const perPage = +config.PER_PAGE;
+  const page = req.params.page || 1;
+  const login = req.params.login;
+
+  models.User.findOne({
+    login
+  }).then(user => {
+    models.Post.find({
+      userId: user.id
+    })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .sort({ createdAt: -1 })
+      .then(posts => {
+        models.Post.count({
+          userId: user.id
+        })
+          .then(count => {
+            res.render('archive/user', {
+              posts,
+              _user: user,
+              current: page,
+              pages: Math.ceil(count / perPage),
+              user: {
+                id: userId,
+                login: userLogin
+              }
+            });
+          })
+          .catch(() => {
+            throw new Error('Server Error');
+          });
+      })
+      .catch(() => {
+        throw new Error('Server Error');
+      });
+  });
+});
 
 module.exports = router;

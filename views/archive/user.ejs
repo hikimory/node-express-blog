@@ -1,4 +1,4 @@
-<%- include('layout/header.ejs')%>
+<%- include('../layout/header.ejs')%>
 
   <div class="main">
     <div class="container">
@@ -17,8 +17,6 @@
             </div>
             <div class="bottom">
               <div class="author">
-                Автор:
-                <a href="/">Гедеван</a>
               </div>
               <a href="/">Комментарии</a>
             </div>
@@ -27,20 +25,22 @@
 
             <div class="pagination">
               <% if (current > 2) { %>
-                <a class="new" href="/archive/<%= Number(current) - 1 %>">← К новым</a>
+                <a class="new" href="/users/<%=_user.login %>/<%= Number(current) - 1 %>">← К новым</a>
               <% } %>
               <% if (current == 2) { %>
-                <a class="new" href="/">← На главную</a>
+                <a class="new" href="/users/<%=_user.login %>">← На первую</a>
               <% } %>
               <% if (pages > 0 && current < pages) { %>
-                <a class="old" href="/archive/<%= Number(current) + 1 %>">К старым →</a>
+                <a class="old" href="/users/<%=_user.login %>/<%= Number(current) + 1 %>">К старым →</a>
               <% } %>
             </div>
+
+
       </div>
-      
-      <%- include('layout/sidebar.ejs')%>
+
+      <%- include('../layout/sidebar.ejs')%>
 
     </div>
   </div>
 
-  <%- include('layout/footer.ejs')%>
+  <%- include('../layout/footer.ejs')%>
