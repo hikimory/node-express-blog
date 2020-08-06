@@ -1,12 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [2.1.0] - 2020-08-06
+## [2.2.0] - 2020-08-06
 ### Added
 - User page.
 
+### Changed
+- Route syntax.
+
 ### Fixed
 - Post page.
+- Post scripts.
 
 ## [2.1.0] - 2020-08-05
 ### Added
