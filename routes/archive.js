@@ -2,6 +2,8 @@ const {Router} = require('express');
 const router = Router();
 const models = require('../models');
 const config = require('../config');
+const moment = require('moment');
+moment.locale('ru');
 
 async function posts(req, res) {
     const userId = req.session.userId;
@@ -56,8 +58,16 @@ async function posts(req, res) {
           err.status = 404;
           next(err);
         } else {
+
+          const comments = await models.Comment.find({
+            postId: post.id,
+            parent: { $exists: false }
+          });
+
           res.render('post/post', {
             post,
+            comments,
+            moment,
             user: {
               id: userId,
               login: userLogin
