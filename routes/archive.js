@@ -12,12 +12,27 @@ async function posts(req, res) {
     const page = req.params.page || 1;
   
     try {
-      const posts = await models.Post.find({})
+      const posts = await models.Post.find({status: 'published'})
         .skip(perPage * page - perPage)
         .limit(perPage)
         .populate('userId')
+        .populate('uploads')
         .sort({ createdAt: -1 });
-  
+
+        posts.map(post => {
+          let body = post.body;
+          if (post.uploads.length) {
+            post.uploads.forEach(upload => {
+              post.body = body.replace(
+                `src="${upload.id}"`,
+                `src="/${config.DESTINATION}${upload.path}"`
+              );
+            });
+          }
+          post.save()
+          return post
+        });
+      
       const count = await models.Post.count();
   
       res.render('archive/index', {
@@ -30,6 +45,7 @@ async function posts(req, res) {
         }
       });
     } catch (error) {
+      console.log(error)
       throw new Error('Server Error');
     }
 }
@@ -50,8 +66,9 @@ async function posts(req, res) {
     } else {
       try {
         const post = await models.Post.findOne({
-          url
-        });
+          url,
+          status: 'published'
+        }).populate('uploads');
   
         if (!post) {
           const err = new Error('Not Found');
@@ -63,6 +80,18 @@ async function posts(req, res) {
             postId: post.id,
             parent: { $exists: false }
           });
+
+          let body = post.body;
+          if (post.uploads.length) {
+            post.uploads.forEach(upload => {
+              post.body = body.replace(
+                `src="${upload.id}"`,
+                `src="/${config.DESTINATION}${upload.path}"`
+              );
+            });
+          }
+
+          post.save()
 
           res.render('post/post', {
             post,
@@ -98,7 +127,22 @@ router.get('/users/:login/:page*?', async(req, res, next) => {
     })
       .skip(perPage * page - perPage)
       .limit(perPage)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .populate('uploads');
+
+      posts.map(post => {
+        let body = post.body;
+        if (post.uploads.length) {
+          post.uploads.forEach(upload => {
+            post.body = body.replace(
+              `src="${upload.id}"`,
+              `src="/${config.DESTINATION}${upload.path}"`
+            );
+          });
+        }
+        post.save()
+        return post
+      });
 
     const count = await models.Post.count({
       userId: user.id

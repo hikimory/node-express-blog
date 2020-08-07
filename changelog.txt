@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.0] - 2020-08-07
+### Added
+- Upload model.
+- Upload route.
+- Upload form.
+- Ability to edit posts.
+- Image resizer.
+- Random file structure for images.
+- Ability to show upload images.
+- Ability to insert upload images.
+
+### Changed
+- Post modal.
+- Post page.
+
 ## [3.1.0] - 2020-08-06
 ### Added
 - Comment layout.
