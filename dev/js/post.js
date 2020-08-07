@@ -20,42 +20,53 @@ $(function() {
         }
     }
 
-    // publish
-    $('.publish-button').on('click', function(e) {
+  // publish
+  $('.publish-button, .save-button').on('click', function(e) {
     e.preventDefault();
     removeErrors();
 
+    let isDraft =
+      $(this)
+        .attr('class')
+        .split(' ')[0] === 'save-button';
+
     const data = {
       title: $('#post-title').val(),
-      body: $('#post-body').val()
+      body: $('#post-body').val(),
+      isDraft: isDraft,
+      postId: $('#post-id').val()
     };
 
     if (!data.title || !data.body) {
-        const fields = [];
-        if (!data.title) fields.push('title');
-        if (!data.body) fields.push('body');
-        printError({error: 'Все поля должны быть заполнены!', fields})
+      const fields = [];
+      if (!data.title) fields.push('title');
+      if (!data.body) fields.push('body');
+      printError({error: 'Все поля должны быть заполнены!', fields})
     } else if (data.title.length < 3 || data.title.length > 64) {
-        printError({error: 'Длина заголовка от 3 до 64 символов!', fields: ['title']})
+      printError({error: 'Длина заголовка от 3 до 64 символов!', fields: ['title']})
     } else if (data.body.replace(/<\/?[^>]+(>|$)/g, "").length < 3) {
-        printError({error: 'Текст не менее 3х символов!', fields: ['body']})
+      printError({error: 'Текст не менее 3х символов!', fields: ['body']})
     }
     else {
-        $.ajax({
-            type: 'POST',
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            url: '/post/add'
-          }).done(function(data) {
-            console.log(data);
-            if (!data.ok) {
-              printError(data)
-            } else {
-              $(location).attr('href', '/');
-            }
-        });
-    }
-  });
+    $.ajax({
+      type: 'POST',
+      data: JSON.stringify(data),
+      contentType: 'application/json',
+      url: '/post/add'
+    }).done(function(data) {
+      console.log(data);
+      if (!data.ok) {
+        printError(data)
+      } else {
+        if (isDraft) {
+          $(location).attr('href', '/post/edit/' + data.post.id);
+        } else {
+          $(location).attr('href', '/posts/' + data.post.url);
+        }
+      }
+    });
+  }
+});
 
   // upload
   $('#fileinfo').on('submit', function(e) {

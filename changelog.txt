@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 - Upload model.
 - Upload route.
 - Upload form.
+- Ability to edit posts.
+
+### Changed
+- Post modal.
+- Post page.
 
 ## [3.1.0] - 2020-08-06
 ### Added

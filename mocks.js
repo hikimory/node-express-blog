@@ -1,20 +1,25 @@
 const faker = require('faker');
 const models = require('./models');
+const tr = require('transliter');
 
 const userId = 'userId'
 
-module.exports = () => {
-    models.Post.remove()
-      .then(() => {
-        Array.from({ length: 20 }).forEach(() => {
-          models.Post.create({
-            title: faker.lorem.words(5),
-            body: faker.lorem.words(25),
-            userId
-          })
-            .then(console.log)
-            .catch(console.log);
+module.exports = async () => {
+    try {
+      await models.Post.remove();
+  
+      Array.from({ length: 20 }).forEach(async () => {
+        const title = faker.lorem.words(5);
+        const url = `${tr.slugify(title)}-${Date.now().toString(36)}`;
+        const post = await models.Post.create({
+          title,
+          body: faker.lorem.words(25),
+          url,
+          userId
         });
-      })
-      .catch(console.log);
-  };
+        console.log(post);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+};
