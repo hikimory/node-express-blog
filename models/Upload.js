@@ -2,10 +2,6 @@ const {Schema, model} = require('mongoose')
 
 const schema = new Schema(
     {
-      postId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Post'
-      },
       userId: {
         type: Schema.Types.ObjectId,
         ref: 'User'

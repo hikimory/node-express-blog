@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 - Upload route.
 - Upload form.
 - Ability to edit posts.
+- Image resizer.
+- Random file structure for images.
 
 ### Changed
 - Post modal.
