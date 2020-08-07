@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Image resizer.
 - Random file structure for images.
 - Ability to show upload images.
+- Ability to insert upload images.
 
 ### Changed
 - Post modal.

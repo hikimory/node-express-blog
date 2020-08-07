@@ -68,33 +68,46 @@ $(function() {
   }
 });
 
-// upload
-$('#file').on('change', function() {
-  // e.preventDefault();
+  // upload
+  $('#file').on('change', function() {
+    // e.preventDefault();
 
-  let formData = new FormData();
-  formData.append('postId', $('#post-id').val());
-  formData.append('file', $('#file')[0].files[0]);
+    let formData = new FormData();
+    formData.append('postId', $('#post-id').val());
+    formData.append('file', $('#file')[0].files[0]);
 
-  $.ajax({
-    type: 'POST',
-    url: '/upload/image',
-    data: formData,
-    processData: false,
-    contentType: false,
-    success: function(data) {
-      console.log(data);
-      $('#fileinfo').prepend(
-        '<div class="img-container"><img src="/uploads' +
-          data.filePath +
-          '" alt="" /></div>'
-      );
-    },
-    error: function(e) {
-      console.log(e);
-    }
+    $.ajax({
+      type: 'POST',
+      url: '/upload/image',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function(data) {
+        console.log(data);
+        $('#fileinfo').prepend(
+          '<div class="img-container"><img src="/uploads' +
+            data.filePath +
+            '" alt="" /></div>'
+        );
+      },
+      error: function(e) {
+        console.log(e);
+      }
+    });
+
   });
 
-});
-
+  // inserting image
+  $('.img-container').on('click', function() {
+    let imageId = $(this).attr('id');
+    let txt = $('#post-body');
+    let caretPos = txt[0].selectionStart;
+    let textAreaTxt = txt.val();
+    let txtToAdd = '<img src="'+ imageId +'" alt="img">';
+    txt.val(
+      textAreaTxt.substring(0, caretPos) +
+        txtToAdd +
+        textAreaTxt.substring(caretPos)
+    );
+  });
 });
