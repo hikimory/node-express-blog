@@ -68,25 +68,33 @@ $(function() {
   }
 });
 
-  // upload
-  $('#fileinfo').on('submit', function(e) {
-    e.preventDefault();
+// upload
+$('#file').on('change', function() {
+  // e.preventDefault();
 
-    let formData = new FormData(this);
+  let formData = new FormData();
+  formData.append('postId', $('#post-id').val());
+  formData.append('file', $('#file')[0].files[0]);
 
-    $.ajax({
-      type: 'POST',
-      url: '/upload/image',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function(r) {
-        console.log(r);
-      },
-      error: function(e) {
-        console.log(e);
-      }
-    });
+  $.ajax({
+    type: 'POST',
+    url: '/upload/image',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function(data) {
+      console.log(data);
+      $('#fileinfo').prepend(
+        '<div class="img-container"><img src="/uploads' +
+          data.filePath +
+          '" alt="" /></div>'
+      );
+    },
+    error: function(e) {
+      console.log(e);
+    }
   });
+
+});
 
 });

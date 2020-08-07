@@ -43,9 +43,11 @@ const storage = diskStorage({
 
     // write to post
     const uploads = post.uploads;
-    uploads.push(upload.id);
+    uploads.unshift(upload.id);
     post.uploads = uploads;
     await post.save();
+
+    req.filePath = dir + '/' + fileName;
 
     cb(null, fileName);
   },
@@ -95,7 +97,8 @@ router.post('/image', (req, res) => {
 
     res.json({
       ok: !error,
-      error
+      error,
+      filePath: req.filePath
     });
   });
 });
