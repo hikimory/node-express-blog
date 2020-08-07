@@ -1,10 +1,4 @@
 $(function() {
-    const editor = new MediumEditor('#post-body', {
-        placeholder: {
-          text: '',
-          hideOnClick: true
-        }
-    });
 
   function removeErrors() {
     $('.post-form p.error').remove();
@@ -33,7 +27,7 @@ $(function() {
 
     const data = {
       title: $('#post-title').val(),
-      body: $('#post-body').html()
+      body: $('#post-body').val()
     };
 
     if (!data.title || !data.body) {
@@ -62,4 +56,22 @@ $(function() {
         });
     }
   });
+
+  // upload
+  $('#fileinfo').on('submit', function(e) {
+    e.preventDefault();
+  
+    const formData = new FormData(this);
+  
+    $.ajax({
+      type: 'POST',
+      url: '/upload/image',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: (r) => console.log(r),
+      error: (e) => console.log(e)
+    });
+  });
+
 });

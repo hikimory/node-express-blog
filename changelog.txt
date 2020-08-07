@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.0] - 2020-08-07
+### Added
+- Upload model.
+- Upload route.
+- Upload form.
+
 ## [3.1.0] - 2020-08-06
 ### Added
 - Comment layout.

@@ -29,8 +29,7 @@ function scripts()
     .src([
       'dev/js/auth.js',
       'dev/js/post.js',
-      'dev/js/comment.js',
-      'node_modules/medium-editor/dist/js/medium-editor.min.js'
+      'dev/js/comment.js'
     ])
     .pipe(concat('scripts.js'))
     .pipe(terser())
