@@ -1,2 +1,82 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## [4.1.0] - 2020-08-07
+### Added
+- Upload model.
+- Upload route.
+- Upload form.
+- Ability to edit posts.
+- Image resizer.
+- Random file structure for images.
+- Ability to show upload images.
+- Ability to insert upload images.
+
+### Changed
+- Post modal.
+- Post page.
+
+## [3.1.0] - 2020-08-06
+### Added
+- Comment layout.
+- Comment route.
+- Comment model.
+- Comment scripts.
+- Ability to add comments.
+
+### Fixed
+- Adding comments.
+
+## [2.2.0] - 2020-08-06
+### Added
+- User page.
+
+### Changed
+- Route syntax.
+
+### Fixed
+- Post page.
+- Post scripts.
+
+## [2.1.0] - 2020-08-05
+### Added
+- Post page.
+- Editor plugin.
+- Post form validation.
+- Ability to add posts.
+- Post generator.
+- Pagination.
+- Post route.
+
+### Fixed
+- Post and auth scripts.
+
+## [1.2.0] - 2020-08-04
+### Added
+- Session.
+- Authorization.
+- Authorization route.
+
+### Changed
+- Refactoring project files.
+
+## [1.1.0] - 2020-08-04
+### Added
+- Models.
+- Registration form validation.
+- Registration route.
+- Password encryption.
+
+## [0.2.0] - 2020-08-04
+### Added
+- Static resources.
+- Layout components.
+- Registration and authorization forms.
+- Gulp.
+
+## [0.1.0] - 2020-08-04
+### Added
+- Express and mongoose support.
+- EJS template engine.
+- Environment variables.
+- Database connection.
